@@ -1,11 +1,19 @@
+//Read user data form Old Master.txt and display
+//Read transactions from Transaction.txt and display
+//Apply transactiont to old master, create new master and write result to it.
+//AccountsMngMain.cpp
+//Hanfei Xu CIT284
+//Mar 12 2016
+
+
 #include <iostream>
 #include <iomanip>
 #include <string>
 #include <fstream>
 #include <vector>
 #include <conio.h>
-#include <algorithm>
 #include <cstdlib>
+#include <ctype.h>
 #include "UserClass.h"
 #include "Transaction.h"
 using namespace std;
@@ -15,7 +23,7 @@ static vector<Transaction> transList;
 
 int main(){
 
-	fstream oldMaster("old master.txt", ios::in);
+	fstream oldMaster("Old Master.txt", ios::in);
 	string account, name , balanceStr, titleAccount, titleName, titleBalanceStr;
 	string amountStr, titleAmountStr;
 	double balance;
@@ -54,7 +62,7 @@ int main(){
 
 	// load transation    ///////////////////
 
-	fstream transaction("transaction.txt", ios::in);
+	fstream transaction("Transaction.txt", ios::in);
 
 	if (transaction){
 		cout << "  Transaction \n";
@@ -82,23 +90,24 @@ int main(){
 	}
 
 
-	// apply transation   (and display result) (and write to file)   //////////////////
+	// apply transation   (and display result)   //////////////////
 	cout << "\n\n  Transaction Result: \n";
 	cout << setw(16) << "ACCT Number" << setw(24) << "NAME" << setw(16) << "BALANCE" << endl;
 
-	fstream result("New Master.txt", ios::out);
-	result << left << fixed << setprecision(2);
-	result << setw(16) << "ACCT Number" << setw(24) << "NAME" << setw(16) << "BALANCE" << endl;
+	//fstream result("New Master.txt", ios::out);
+	//result << left << fixed << setprecision(2);
+	//result << setw(16) << "ACCT Number" << setw(24) << "NAME" << setw(16) << "BALANCE" << endl;
 
 	bool found = false;
 	for (Transaction trans : transList){
 		found = false;
-		for (User user : userList){
-			if (trans.getAccount() == user.getAccount()){
-				user.setBalance(user.getBalance() + trans.getAmount());
+		auto it = userList.begin();
+		for (int i = 0; it < userList.end(); ++it, ++i){
+			if (trans.getAccount() == it->getAccount()){
+				it->setBalance(it->getBalance() + trans.getAmount());
 				found = true;
-			    user.print();
-				result << setw(16) << user.getAccount() << setw(24) << user.getName() << setw(16) << user.getBalance() << endl;
+			    it->print();
+				//result << setw(16) << it->getAccount() << setw(24) << it->getName() << setw(16) << it->getBalance() << endl;
 			}
 		}
 
@@ -109,25 +118,25 @@ int main(){
 	}
 
 	// display new master   //////////////
-	/*
+	
 	cout << "\n\n  New Master; \n";
 	cout << setw(16) << "ACCT Number" << setw(24) << "NAME" << setw(16) << "BALANCE" << endl;
 	for (User user : userList){
 		user.print();
 	}
 	cout << endl << endl;
-	*/
+	
 
 
-	/// write result to result file   /////////////////
-	/*
+	/// write result to new master file   /////////////////
+	
 	fstream result("New Master.txt", ios::out);
 	result << left << fixed << setprecision(2);
 	result << setw(16) << "ACCT Number" << setw(24) << "NAME" << setw(16) << "BALANCE" << endl;
 	for (User user : userList){
 		result << setw(16) << user.getAccount() << setw(24) << user.getName() << setw(16) << user.getBalance() << endl;
 	}
-	*/
+	
 	_getch();
 	return 0;
 }
